@@ -1,0 +1,11 @@
+<dbobjects>
+    <dbobject>
+        <class_name>com.havens.siamese.entity.Role</class_name>
+        <table_name mark="true">roles</table_name>
+        <cache_key>id</cache_key>
+    </dbobject>
+    <dbobject datasource="deer_user">
+        <class_name>com.havens.siamese.entity.User</class_name>
+        <table_name>users</table_name>
+    </dbobject>
+</dbobjects>

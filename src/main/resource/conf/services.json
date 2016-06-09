@@ -1,0 +1,12 @@
+{
+  "10001": {
+    "code": 10001,
+    "cmd": "time_check",
+    "service": "com.havens.siamese.service.TimeCheckService"
+  },
+  "10002": {
+    "code": 10002,
+    "cmd": "time_check",
+    "service": "com.havens.siamese.service.TimeCheckService"
+  }
+}

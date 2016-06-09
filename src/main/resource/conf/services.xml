@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<server>
+    <instances>
+        <instance>com.havens.siamese.service.StartupService</instance>
+    </instances>
+
+    <services>
+        <service code="time_check">com.havens.siamese.service.TimeCheckService</service>
+        <service code="user_login">com.havens.siamese.service.UserLoginService</service>
+        <service code="get_roles">com.havens.siamese.service.GetRolesService</service>
+        <service code="new_role">com.havens.siamese.service.NewRolesService</service>
+    </services>
+</server>
