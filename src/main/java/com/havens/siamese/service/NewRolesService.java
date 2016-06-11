@@ -49,7 +49,7 @@ public class NewRolesService extends UserService{
         }
 
         role.userCtrl = userCtrl;
-        write(GetRolesService.get_roles("new_role",userCtrl.getRoles(userId)));
+//        write(GetRolesService.get_roles("new_role",userCtrl.getRoles(userId)));
     }
 
 

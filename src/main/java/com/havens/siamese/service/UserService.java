@@ -3,6 +3,7 @@ package com.havens.siamese.service;
 import com.havens.siamese.Controller.UserController;
 import com.havens.siamese.ErrorCode;
 import com.havens.siamese.Service;
+import com.havens.siamese.entity.User;
 import com.havens.siamese.message.MessageHelper;
 import com.havens.siamese.server.Server;
 import com.havens.siamese.server.WorldManager;
@@ -15,6 +16,7 @@ import org.json.JSONObject;
 public abstract class UserService extends Service{
     public UserController userCtrl;
     protected WorldManager worldManager;
+    protected User user;
 
     @Override
     public void create(Server server) throws Exception {
@@ -29,11 +31,10 @@ public abstract class UserService extends Service{
             return false;
         }
         userCtrl=worldManager.onlineUser().getUnchecked(userId);
+        user=userCtrl.user;
         return true;
     }
 
     public void afterFilter() throws Exception {
     }
-
 }
-//userCtrl = worldManager.onlineUser().getUnchecked(userId);

@@ -18,7 +18,7 @@ public class GetRolesService extends UserService{
         int userId= StringHelper.getInt(jObject,"userId");
         String roleName= StringHelper.getString(jObject,"roleName");
         System.out.println(roleName);
-        write(get_roles("get_roles",userCtrl.getRoles(userId)));
+//        write(get_roles("get_roles",userCtrl.getRoles(userId)));
     }
 
     public static String get_roles(String cmd, List<Role> roles) {

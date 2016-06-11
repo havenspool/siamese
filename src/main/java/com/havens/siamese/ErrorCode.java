@@ -12,4 +12,5 @@ public final class ErrorCode {
     public final static int ROLENAME_EXIST=1006;//角色名已经存在
     public final static int CREATE_ROLE_USER_NOT_EXIST=1008;//创建角色时用户不存在
     public final static int CREATE_ROLE_NOT_PERMISSION=1009;//创建角色时存在禁词
+    public final static int ROOM_NOT_EXISTS=1010;//房间不存在
 }

@@ -10,5 +10,14 @@
         <service code="user_login">com.havens.siamese.service.UserLoginService</service>
         <service code="get_roles">com.havens.siamese.service.GetRolesService</service>
         <service code="new_role">com.havens.siamese.service.NewRolesService</service>
+
+        <!-- room -->
+        <service code="enter_room">com.havens.siamese.service.room.EnterRoomService</service>
+        <service code="exit_room">com.havens.siamese.service.room.ExitRoomService</service>
+        <service code="change_room">com.havens.siamese.service.room.ChangeRoomService</service>
+
+        <!-- card -->
+        <service code="enter_room">com.havens.siamese.service.card.EnterRoomService</service>
+
     </services>
 </server>

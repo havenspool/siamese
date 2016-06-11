@@ -1,28 +1,15 @@
 <db>
     <datasources>
         <!-- _db_ 为关键字  -->
-        <datasource name="deer" default="true" role="1">
+        <datasource name="siamese" default="true" role="1">
             <driver>com.mysql.jdbc.Driver</driver>
             <url>jdbc:mysql://127.0.0.1:3306/deer?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</url>
             <user>root</user>
             <password>havens</password>
         </datasource>
-        <datasource name="deer_user" role="1">
-            <driver>com.mysql.jdbc.Driver</driver>
-            <url>jdbc:mysql://127.0.0.1:3306/deer_user?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</url>
-            <user>root</user>
-            <password>havens</password>
-        </datasource>
-
-        <datasource name="deer" default="true" role="2">
+        <datasource name="siamese" default="true" role="2">
             <driver>com.mysql.jdbc.Driver</driver>
             <url>jdbc:mysql://127.0.0.1:3306/deer?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</url>
-            <user>root</user>
-            <password>havens</password>
-        </datasource>
-        <datasource name="deer_user" role="2">
-            <driver>com.mysql.jdbc.Driver</driver>
-            <url>jdbc:mysql://127.0.0.1:3306/deer_user?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</url>
             <user>root</user>
             <password>havens</password>
         </datasource>
