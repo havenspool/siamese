@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Desk extends DBObject {
     public int deskId;
     public long time;//用于验证是否是同一盘
-    public int bankerUserId;
+    public long bankerUserId;
     public ConcurrentHashMap<Long, User> users;
     public ConcurrentHashMap<Long, int[]> cards;
     public int betCoins;//总下注金额

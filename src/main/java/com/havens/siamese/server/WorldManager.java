@@ -122,7 +122,67 @@ public class WorldManager {
     public void changeDesk(User user) {
         int deskId=user.deskId;
         outDesk(user);
-        joinDesk(user,user.deskId);
+        joinDesk(user,deskId);
+    }
+
+    public void readyNext(int deskId) {
+        synchronized (DESK_LOCK) {
+            Desk desk = allDesks.get(deskId);
+            if (desk != null) {
+                desk.state = Constants.DESK_READY;
+            }
+        }
+    }
+
+    public void doBanker(User user) {
+        synchronized (DESK_LOCK) {
+            Desk desk = allDesks.get(user.deskId);
+            if (desk != null && desk.state == Constants.DESK_READY) {
+                desk.state = Constants.DESK_GETBANKER;
+                desk.bankerUserId=user.id;
+                User tmp=desk.users.get(user.id);
+                if(tmp!=null){
+                    tmp.banker=1;
+                }
+            }
+        }
+    }
+
+    public boolean bet(User user,int betCoin) {
+        boolean isBet=false;
+        synchronized (DESK_LOCK) {
+            Desk desk = allDesks.get(user.deskId);
+            if (desk != null) {
+                if(desk.state == Constants.DESK_GETBANKER){
+                    desk.state = Constants.DESK_BET;
+                }
+                if(desk.state == Constants.DESK_BET&&desk.users!=null&&desk.users.size()>0){
+                    User tmp=desk.users.get(user.id);
+                    if(tmp!=null){
+                        tmp.betCoin=betCoin;
+                        isBet=true;
+                    }
+                }
+            }
+        }
+        return isBet;
+    }
+
+    public boolean openCard(User user) {
+        boolean open=false;
+        synchronized (DESK_LOCK) {
+            Desk desk = allDesks.get(user.deskId);
+            if (desk != null) {
+                if(desk.state == Constants.DESK_BET){
+                    desk.state = Constants.DESK_OPENCARD;
+                }
+                if(desk.state == Constants.DESK_OPENCARD&&desk.users!=null&&desk.users.size()>0){
+                    //产生牌点数
+                    open=true;
+                }
+            }
+        }
+        return open;
     }
 
 }

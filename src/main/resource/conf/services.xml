@@ -14,10 +14,16 @@
         <!-- room -->
         <service code="enter_room">com.havens.siamese.service.room.EnterRoomService</service>
         <service code="exit_room">com.havens.siamese.service.room.ExitRoomService</service>
-        <service code="change_room">com.havens.siamese.service.room.ChangeRoomService</service>
+
+        <!-- desk -->
+        <service code="change_desk">com.havens.siamese.service.desk.ChangeDeskService</service>
+        <service code="desk_info">com.havens.siamese.service.desk.DeskInfoService</service>
 
         <!-- card -->
-        <service code="enter_room">com.havens.siamese.service.card.EnterRoomService</service>
-
+        <service code="do_banker">com.havens.siamese.service.card.DoBankerService</service>
+        <service code="get_banker">com.havens.siamese.service.card.GetBankerService</service>
+        <service code="bet">com.havens.siamese.service.card.BetService</service>
+        <service code="open_card">com.havens.siamese.service.card.OpenCardService</service>
+        <service code="ready_next">com.havens.siamese.service.card.ReadyNextService</service>
     </services>
 </server>

@@ -13,4 +13,7 @@ public final class ErrorCode {
     public final static int CREATE_ROLE_USER_NOT_EXIST=1008;//创建角色时用户不存在
     public final static int CREATE_ROLE_NOT_PERMISSION=1009;//创建角色时存在禁词
     public final static int ROOM_NOT_EXISTS=1010;//房间不存在
+    public final static int BET_COIN_ERROR=1011;//下注金额有误
+    public final static int BET_COIN_CANNOT=1012;//无法下注
+    public final static int BANKER_IS_EXIST=1013;//已经存在庄家
 }

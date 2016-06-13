@@ -1,4 +1,4 @@
-package com.havens.siamese.service.room;
+package com.havens.siamese.service.desk;
 
 import com.havens.siamese.ErrorCode;
 import com.havens.siamese.entity.Desk;
@@ -13,18 +13,18 @@ import org.json.JSONObject;
 /**
  * Created by havens on 16-6-11.
  */
-public class ChangeRoomService extends UserService {
+public class ChangeDeskService extends UserService {
     @Override
     public void filter(JSONObject jObject) throws Exception {
         int roomId= StringHelper.getInt(jObject,"roomId");
 
         if(roomId!= WorldManager.SERVER_ID){
-            write(MessageHelper.cmd_error("change_room", false, ErrorCode.ROOM_NOT_EXISTS));
+            write(MessageHelper.cmd_error("change_desk", false, ErrorCode.ROOM_NOT_EXISTS));
             return;
         }
 
         worldManager.changeDesk(user);
-        write(enter_room("change_room",worldManager.getDesk(user.deskId)));
+        write(enter_room("change_desk",worldManager.getDesk(user.deskId)));
     }
 
     public static String enter_room(String cmd, Desk desk) {

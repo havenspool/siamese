@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+
 /**
  * Created by havens on 16-5-23.
  */
@@ -29,10 +31,20 @@ public class Test {
         return json.toString();
     }
 
+    public static void testArray() throws JSONException {
+        int[] arr=new int[3];
+        arr[0]=1;
+        arr[1]=2;
+        arr[2]=3;
+        System.out.println(Arrays.toString(arr));
+    }
+
     public static void main(String[] args) throws Exception {
-        JSONArray roleList = new JSONArray();
-        roleList.put("1");
-        roleList.put("2");
-        System.out.println(jsonTest());
+//        JSONArray roleList = new JSONArray();
+//        roleList.put("1");
+//        roleList.put("2");
+//        System.out.println(jsonTest());
+
+        testArray();
     }
 }
