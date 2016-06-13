@@ -9,7 +9,7 @@
     <version>1.0-Alpha</version>
     <packaging>jar</packaging>
 
-    <name>totoro</name>
+    <name>siamese</name>
     <url>http://www.havens.com</url>
 
     <properties>
