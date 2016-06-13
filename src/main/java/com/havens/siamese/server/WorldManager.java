@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WorldManager {
     public static String User_DB;  //UserDB
     public static int SERVER_ID;  //serverId
-    public static int SERVER_NAME;  //serverName
+    public static String SERVER_NAME;  //serverName
     public static int MINCOST;//房间最低消费
     public static int CONDITION;//房间条件
     public static int ROOMNUM;//房间最大人数
