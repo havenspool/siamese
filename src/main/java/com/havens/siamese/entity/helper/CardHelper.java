@@ -55,7 +55,7 @@ public class CardHelper {
     }
 
     public static int countPoints(int[] card){
-        return cardNUm(card[0])+cardNUm(card[1])+cardNUm(card[2]);
+        return (cardNUm(card[0])+cardNUm(card[1])+cardNUm(card[2]))%10;
     }
 
     public static int cardType(int[] card){
@@ -70,6 +70,15 @@ public class CardHelper {
         if(countPoints(card)==8) return 2;
 
         return 1;
+    }
+
+    public static long equalsCard(int[] card1,long userId1,int[] card2,long userId2){
+        if(cardType(card1)>cardType(card2)) return userId1;
+        else if(cardType(card1)<cardType(card1)) return userId2;
+
+
+
+        return userId1;
     }
 
 
