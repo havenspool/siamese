@@ -10,6 +10,7 @@ import com.havens.siamese.entity.dao.cache.DBFactoryCache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.havens.siamese.entity.helper.CardHelper;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -90,6 +91,7 @@ public class WorldManager {
             for (Desk desk:allDesks.values()){
                 if(!desk.isFuul&&desk.state==Constants.DESK_READY&&desk.deskId!=deskId){
                     user.position=desk.users.size();
+                    if(desk.users==null) desk.users=new ConcurrentHashMap<Long, User>();
                     desk.users.put(user.id,user);
                     isJoin=true;
                 }
@@ -178,6 +180,21 @@ public class WorldManager {
                 }
                 if(desk.state == Constants.DESK_OPENCARD&&desk.users!=null&&desk.users.size()>0){
                     //产生牌点数
+                    int[] cards=CardHelper.genCard(desk.users.size());
+                    int index=0;
+                    for(User tmp:desk.users.values()){
+                        if(tmp!=null){
+                            tmp.cards=new int[3];
+                            tmp.cards[0]=cards[index++];
+                            tmp.cards[1]=cards[index++];
+                            tmp.cards[2]=cards[index++];
+                            if(desk.cards==null) desk.cards=new ConcurrentHashMap<Long, int[]>();
+                            desk.cards.put(tmp.id,tmp.cards);
+                        }
+                    }
+                    //判断输赢
+
+
                     open=true;
                 }
             }
