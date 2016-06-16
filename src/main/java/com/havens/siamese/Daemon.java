@@ -15,16 +15,17 @@ public class Daemon{
     public static final String SERVER_PROP = "server.properties";
 
     public static void setUp(){
-        Properties config = FileHelper.getProperties(SERVER_PROP);
-        Server.port = Integer.valueOf(config.getProperty("port", "9010")).intValue();
-        Server.APP_HOME = config.getProperty("app_home", "/home/havens/Code/siamese/");
+        Properties config = FileHelper.getPropertiesUTF8(SERVER_PROP);
+        WorldManager.PORT = Integer.valueOf(config.getProperty("port", "9010")).intValue();
+        WorldManager.APP_HOME = config.getProperty("app_home", "/home/havens/Code/siamese/");
 
+        WorldManager.HOST = config.getProperty("host", "119.29.254.14");
         WorldManager.User_DB = config.getProperty("user_db", "miser");
         WorldManager.SERVER_ID = Integer.valueOf(config.getProperty("server_id", "10001")).intValue();
-        WorldManager.SERVER_NAME = config.getProperty("server_name", "招财进宝");
+        WorldManager.SERVER_NAME = config.getProperty("server_name", "小试身手");
         WorldManager.MINCOST = Integer.valueOf(config.getProperty("mincost", "1000")).intValue();
         WorldManager.CONDITION = Integer.valueOf(config.getProperty("condition", "1")).intValue();
-        WorldManager.ROOMNUM = Integer.valueOf(config.getProperty("roomnum", "300")).intValue();
+        WorldManager.ROOMMAXNUM = Integer.valueOf(config.getProperty("roomMaxNum", "300")).intValue();
     }
 
     public static void main(String[] args) throws Exception {
@@ -32,11 +33,13 @@ public class Daemon{
 
         try{
             String pid = ManagementFactory.getRuntimeMXBean().getName();
-            PrintWriter out = new PrintWriter(Server.APP_HOME + "pid.txt");
+            PrintWriter out = new PrintWriter(WorldManager.APP_HOME + "pid.txt");
             out.println(pid.substring(0, pid.indexOf('@')));
             out.flush();
             out.close();
             System.out.println("pid:"+pid);
+
+            System.out.println("SERVER_NAME:"+WorldManager.SERVER_NAME);
         }
         catch (Exception localException){
         }

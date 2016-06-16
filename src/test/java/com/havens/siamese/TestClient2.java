@@ -10,29 +10,82 @@ import java.nio.ByteBuffer;
  * Created by havens on 16-6-14.
  */
 public class TestClient2 {
+
+    public static String enterRoom(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"enter_room\"}";
+        return msg;
+    }
+
+    public static String exitRoom(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"exit_room\"}";
+        return msg;
+    }
+
+    public static String change_desk(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"change_desk\"}";
+        return msg;
+    }
+
+    public static String desk_info(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"desk_info\"}";
+        return msg;
+    }
+
+    public static String do_banker(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"do_banker\"}";
+        return msg;
+    }
+
+    public static String get_banker(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"get_banker\"}";
+        return msg;
+    }
+
+    public static String bet(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"bet\"}";
+        return msg;
+    }
+
+    public static String open_card(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"open_card\"}";
+        return msg;
+    }
+
+    public static String ready_next(){
+        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"ready_next\"}";
+        return msg;
+    }
+
+
+    public static void sendAndReceive(OutputStream out,InputStream in,String msg) throws Exception{
+        out.write(msg.getBytes("UTF-8"));
+        out.flush();
+        byte[] buff = new byte[4096];
+        int readed = in.read(buff);
+        if(readed > 0){
+            String str = new String(buff,0,readed);
+            System.out.println("client received msg from server:"+str);
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         Socket server = new Socket();
-        server.connect(new InetSocketAddress("127.0.0.1", 8260));//119.29.254.14  127.0.0.1
+        server.connect(new InetSocketAddress("127.0.0.1", 9010));//119.29.254.14  127.0.0.1
         server.setKeepAlive(true);
         OutputStream out = server.getOutputStream();
         InputStream in = server.getInputStream();
 
-        ByteBuffer header = ByteBuffer.allocate(4);
-        String sendMsg="{\"userName\":\"asan\",\"userPwd\":\"123456\",\"channel\":\"SYGF\",\"cmd\":\"user_login\"}";
-        String msg="{\"serverId\":10001,\"userId\":1001,\"roleName\":\"哈哈\",\"cmd\":\"get_roles\"}";
-        header.putInt(sendMsg.getBytes().length);
-//        out.write(header.array());
-//        byte[] msg=new byte[sendMsg.getBytes().length+2];
-//        out.write(msg);
-        out.write(msg.getBytes("UTF-8"));
-        out.flush();
-
-        byte[] buff = new byte[4096];
-        int readed = in.read(buff);
-        if(readed > 0){
-            String str = new String(buff,4,readed);
-            System.out.println("client received msg from server:"+str);
-        }
+        //room
+        sendAndReceive(out,in,enterRoom());
+        sendAndReceive(out,in,change_desk());
+        sendAndReceive(out,in,exitRoom());
+        sendAndReceive(out,in,enterRoom());
+        sendAndReceive(out,in,desk_info());
+        sendAndReceive(out,in,do_banker());
+        sendAndReceive(out,in,get_banker());
+        sendAndReceive(out,in,bet());
+        sendAndReceive(out,in,open_card());
+        sendAndReceive(out,in,ready_next());
         out.close();
     }
 }

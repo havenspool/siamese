@@ -18,9 +18,6 @@ public class Server implements Runnable{
     public static final String SERVICES_FILE = "services.xml";
     private final HashMap<String, Class> services;
 
-    public static int port;
-    public static String APP_HOME;
-
     protected static final int BIZGROUPSIZE = Runtime.getRuntime().availableProcessors()*2; //默认
     protected static final int BIZTHREADSIZE = 4;
     private static final EventLoopGroup bossGroup = new NioEventLoopGroup(BIZGROUPSIZE);
@@ -85,8 +82,8 @@ public class Server implements Runnable{
             deployServices();
 
             init();
-            System.out.println("listen on port:"+port);
-            bind(port);
+            System.out.println("listen on port:"+WorldManager.PORT);
+            bind(WorldManager.PORT);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -41,6 +41,18 @@ public class FileHelper {
         return properties;
     }
 
+    public static Properties getPropertiesUTF8(String filename) {
+        Properties properties = new Properties();
+        try {
+            properties.load(new InputStreamReader(FileHelper.class.getClassLoader().getResourceAsStream(filename), "UTF-8"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return properties;
+    }
+
+
+
     public static Properties getPropertiesByAbsFile(String filename) {
         Properties properties = new Properties();
         try {

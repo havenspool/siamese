@@ -23,7 +23,10 @@ public class WorldManager {
     public static String SERVER_NAME;  //serverName
     public static int MINCOST;//房间最低消费
     public static int CONDITION;//房间条件
-    public static int ROOMNUM;//房间最大人数
+    public static int ROOMMAXNUM;//房间最大人数
+    public static String HOST;
+    public static int PORT;
+    public static String APP_HOME;
 
     private DBFactory dbFactory;
     private static WorldManager god;
@@ -91,6 +94,7 @@ public class WorldManager {
             for (Desk desk:allDesks.values()){
                 if(!desk.isFuul&&desk.state==Constants.DESK_READY&&desk.deskId!=deskId){
                     user.position=desk.users.size();
+                    user.deskId=desk.deskId;
                     if(desk.users==null) desk.users=new ConcurrentHashMap<Long, User>();
                     desk.users.put(user.id,user);
                     isJoin=true;
@@ -101,6 +105,7 @@ public class WorldManager {
                 desk.deskId=allDesks.size()+1;
                 desk.state=Constants.DESK_READY;
                 desk.users=new ConcurrentHashMap<Long, User>();
+                user.deskId=desk.deskId;
                 user.position=desk.users.size();
                 desk.users.put(user.id,user);
                 allDesks.put(desk.deskId,desk);
