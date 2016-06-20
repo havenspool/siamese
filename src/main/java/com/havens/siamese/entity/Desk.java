@@ -1,5 +1,6 @@
 package com.havens.siamese.entity;
 
+import com.havens.siamese.Constants;
 import com.havens.siamese.db.DBObject;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,8 +16,13 @@ public class Desk extends DBObject {
     public ConcurrentHashMap<Long, int[]> cards;
     public int betCoins;//总下注金额
     public int winUserId;//赢家Id
-    public boolean isFuul;//是否满人
 
     public int state;//0准备 1抢庄 2下注 3发牌 4结算
+
+    public boolean isFull(){
+        if(users==null) return false;
+        if(users.size()< Constants.DESK_MAXNUM) return false;
+        return true;
+    }
 
 }

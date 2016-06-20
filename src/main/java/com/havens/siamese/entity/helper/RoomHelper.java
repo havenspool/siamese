@@ -1,6 +1,7 @@
 package com.havens.siamese.entity.helper;
 
 import com.havens.siamese.entity.Desk;
+import com.havens.siamese.entity.User;
 import com.havens.siamese.server.Server;
 import com.havens.siamese.server.WorldManager;
 import org.json.JSONObject;
@@ -21,9 +22,7 @@ public class RoomHelper {
             roomInfo.put("condition",WorldManager.CONDITION);
             roomInfo.put("onlineNum",WorldManager.getInstance().onlineUser().size());
             roomInfo.put("roomMaxNum",WorldManager.ROOMMAXNUM);
-
-            JSONObject playInfo=new JSONObject();
-            roomInfo.put("playInfo",playInfo);
+            roomInfo.put("playInfo", DeskHelper.playerInfoList(desk));
         }
         return  roomInfo;
     }

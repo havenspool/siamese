@@ -11,8 +11,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.havens.siamese.entity.helper.CardHelper;
+import com.havens.siamese.job.DeskJob;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 /**
  * Created by havens on 15-8-13.
@@ -32,6 +33,13 @@ public class WorldManager {
     private static WorldManager god;
     Server server;
     private ConcurrentHashMap<Integer, Desk> allDesks; //牌桌
+    private DeskJob deskJob;
+
+    // thread pool
+    private ThreadPoolExecutor dataJobMgr;
+    // thread pool
+//    private ThreadPoolExecutor udpJobMgr;
+    private ScheduledExecutorService scheduledJobMgr;
 
     private WorldManager(Server server){
         this.server=server;
@@ -39,6 +47,16 @@ public class WorldManager {
         dbFactory.init();
 
         allDesks = new ConcurrentHashMap<Integer, Desk>();
+
+        //dataJobMgr = (ThreadPoolExecutor) Executors.newFixedThreadPool(loneWolf.poolThreads);
+        dataJobMgr = new ThreadPoolExecutor(0, 1000,10L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
+        // Set a default reject handler
+        dataJobMgr.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        scheduledJobMgr = Executors.newScheduledThreadPool(8);
+
+        deskJob=new DeskJob();
+
+       // scheduledJobMgr.scheduleAtFixedRate(deskJob, 1, 60, TimeUnit.SECONDS);
     }
 
     private void buildUpTheWorld() {
@@ -92,7 +110,7 @@ public class WorldManager {
         boolean isJoin=false;
         synchronized (DESK_LOCK){
             for (Desk desk:allDesks.values()){
-                if(!desk.isFuul&&desk.state==Constants.DESK_READY&&desk.deskId!=deskId){
+                if(!desk.isFull()&&desk.state==Constants.DESK_READY&&desk.deskId!=deskId){
                     user.position=desk.users.size();
                     user.deskId=desk.deskId;
                     if(desk.users==null) desk.users=new ConcurrentHashMap<Long, User>();
@@ -116,8 +134,28 @@ public class WorldManager {
     public void outDesk(User user) {
         synchronized (DESK_LOCK) {
             Desk desk = allDesks.get(user.deskId);
-            if (desk != null && desk.state == Constants.DESK_READY) {
+            if (desk != null) {
+                if(desk.state != Constants.DESK_READY){
+                    //扣分
+                }
                 desk.users.remove(user.id);
+            }
+        }
+    }
+
+    public void outDesk(int userId) {
+        synchronized (DESK_LOCK) {
+            for (Desk desk:allDesks.values()){
+                if (desk != null&&desk.users!=null&&desk.users.size()>0) {
+                    if(desk.users.get(userId)!=null){
+                        desk.users.remove(userId);
+
+                        if(desk.users.size()==0) {
+                            allDesks.remove(desk.deskId);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -195,6 +233,7 @@ public class WorldManager {
                             tmp.cards[2]=cards[index++];
                             if(desk.cards==null) desk.cards=new ConcurrentHashMap<Long, int[]>();
                             desk.cards.put(tmp.id,tmp.cards);
+                            System.out.println(tmp.cards);
                         }
                     }
                     //判断输赢

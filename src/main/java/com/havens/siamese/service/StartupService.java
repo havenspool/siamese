@@ -14,7 +14,6 @@ public class StartupService extends Service {
     public void create(Server server) throws Exception {
         // startup
         DfaTool.loadJsonData();
-        WorldManager.getInstance(server);
     }
 
     public void filter(JSONObject jObject) throws Exception {

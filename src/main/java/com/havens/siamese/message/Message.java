@@ -1,5 +1,6 @@
 package com.havens.siamese.message;
 
+import com.havens.siamese.utils.StringHelper;
 import io.netty.channel.Channel;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +20,8 @@ public class Message implements Serializable {
     public String dataJson;
     public JSONObject jObject;
 
+    public int userId;
+
     public Message(){
 
     }
@@ -29,6 +32,11 @@ public class Message implements Serializable {
             return;
         this.cmd=(String)json.get("cmd");
         this.dataJson=str;
+        this.jObject=json;
+
+        int userId= StringHelper.getInt(json,"userId");
+        if(userId==0) return;
+        this.userId=userId;
         this.jObject=json;
     }
 

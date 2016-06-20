@@ -11,12 +11,12 @@ import java.nio.ByteBuffer;
  */
 public class TestClient2 {
 
-    public static String enterRoom(){
+    public static String enter_room(){
         String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"enter_room\"}";
         return msg;
     }
 
-    public static String exitRoom(){
+    public static String exit_room(){
         String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"exit_room\"}";
         return msg;
     }
@@ -76,10 +76,10 @@ public class TestClient2 {
         InputStream in = server.getInputStream();
 
         //room
-        sendAndReceive(out,in,enterRoom());
+        sendAndReceive(out,in,enter_room());
         sendAndReceive(out,in,change_desk());
-        sendAndReceive(out,in,exitRoom());
-        sendAndReceive(out,in,enterRoom());
+        sendAndReceive(out,in,exit_room());
+        sendAndReceive(out,in,enter_room());
         sendAndReceive(out,in,desk_info());
         sendAndReceive(out,in,do_banker());
         sendAndReceive(out,in,get_banker());

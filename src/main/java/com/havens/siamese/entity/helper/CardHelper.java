@@ -82,4 +82,7 @@ public class CardHelper {
     }
 
 
+    public static void main(String[] args){
+        genCard(2);
+    }
 }
