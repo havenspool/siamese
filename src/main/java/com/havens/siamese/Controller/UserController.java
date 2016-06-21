@@ -10,7 +10,7 @@ import com.havens.siamese.entity.dao.UserDao;
 public class UserController {
     public User user;
 
-    public UserController(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -27,5 +27,4 @@ public class UserController {
         }
         return userDao;
     }
-
 }

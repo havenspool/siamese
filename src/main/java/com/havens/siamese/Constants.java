@@ -15,4 +15,8 @@ public class Constants {
     public static final int DESK_OPENCARD=3;
 
     public static final int DESK_MAXNUM=4;//每张桌子最多人数
+
+    //下注金额
+    public static final int BET_TIMES=1;
+    public static final int BET_COINS=1000;
 }

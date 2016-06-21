@@ -12,47 +12,47 @@ import java.nio.ByteBuffer;
 public class TestClient2 {
 
     public static String enter_room(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"enter_room\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"enter_room\"}";
         return msg;
     }
 
     public static String exit_room(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"exit_room\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"exit_room\"}";
         return msg;
     }
 
     public static String change_desk(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"change_desk\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"change_desk\"}";
         return msg;
     }
 
     public static String desk_info(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"desk_info\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"desk_info\"}";
         return msg;
     }
 
     public static String do_banker(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"do_banker\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"do_banker\"}";
         return msg;
     }
 
     public static String get_banker(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"get_banker\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"get_banker\"}";
         return msg;
     }
 
     public static String bet(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"bet\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"betCoinType\":1,\"cmd\":\"bet\"}";
         return msg;
     }
 
     public static String open_card(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"open_card\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"open_card\"}";
         return msg;
     }
 
     public static String ready_next(){
-        String msg="{\"roomId\":10001,\"userId\":1005,\"cmd\":\"ready_next\"}";
+        String msg="{\"roomId\":10001,\"userId\":10002,\"cmd\":\"ready_next\"}";
         return msg;
     }
 

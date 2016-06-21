@@ -76,10 +76,14 @@ public class WorldManager {
     }
 
     private UserController getUserController(int userId) {
-        User user = new User();
-        user.id = userId;
-        UserController userCtrl = new UserController(user);
+        UserController userCtrl = new UserController();
         userCtrl.initDAO(dbFactory);
+        User user= userCtrl.userDao().getUser(userId);
+        if(user==null){
+            user=new User();
+        }
+        user.coin=10000;
+        userCtrl.setUser(user);
         return userCtrl;
     }
 
@@ -233,7 +237,6 @@ public class WorldManager {
                             tmp.cards[2]=cards[index++];
                             if(desk.cards==null) desk.cards=new ConcurrentHashMap<Long, int[]>();
                             desk.cards.put(tmp.id,tmp.cards);
-                            System.out.println(tmp.cards);
                         }
                     }
                     //判断输赢

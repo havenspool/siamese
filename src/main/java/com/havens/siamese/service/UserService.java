@@ -31,6 +31,10 @@ public abstract class UserService extends Service{
             return false;
         }
         userCtrl=worldManager.onlineUser().getUnchecked(userId);
+        if(userCtrl.user.id==0){
+            write(MessageHelper.cmd_error(cmd, false, ErrorCode.USER_NOT_EXIST));
+            return false;
+        }
         user=userCtrl.user;
         return true;
     }

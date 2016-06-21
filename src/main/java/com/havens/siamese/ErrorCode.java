@@ -16,4 +16,5 @@ public final class ErrorCode {
     public final static int BET_COIN_ERROR=1011;//下注金额有误
     public final static int BET_COIN_CANNOT=1012;//无法下注
     public final static int BANKER_IS_EXIST=1013;//已经存在庄家
+    public final static int BET_COIN_NOT_ENOUGH=1014;//下注金额不足
 }

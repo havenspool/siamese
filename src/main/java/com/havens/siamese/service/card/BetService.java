@@ -1,6 +1,7 @@
 package com.havens.siamese.service.card;
 
 import com.havens.siamese.ErrorCode;
+import com.havens.siamese.entity.helper.DeskHelper;
 import com.havens.siamese.message.MessageHelper;
 import com.havens.siamese.service.UserService;
 import com.havens.siamese.utils.StringHelper;
@@ -12,9 +13,15 @@ import org.json.JSONObject;
 public class BetService extends UserService {
     @Override
     public void filter(JSONObject jObject) throws Exception {
-        int betCoin= StringHelper.getInt(jObject,"betCoin");
-        if(betCoin<=0){
+        int betCoinType= StringHelper.getInt(jObject,"betCoinType");
+        if(betCoinType<=0){
             write(MessageHelper.cmd_error("bet", false, ErrorCode.BET_COIN_ERROR));
+            return;
+        }
+
+        int betCoin= DeskHelper.getBetCoin(betCoinType);
+        if(user.coin<betCoin){
+            write(MessageHelper.cmd_error("bet", false, ErrorCode.BET_COIN_NOT_ENOUGH));
             return;
         }
 
