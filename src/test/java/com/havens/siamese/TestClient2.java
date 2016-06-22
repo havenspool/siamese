@@ -70,7 +70,7 @@ public class TestClient2 {
 
     public static void main(String[] args) throws Exception {
         Socket server = new Socket();
-        server.connect(new InetSocketAddress("127.0.0.1", 9010));//119.29.254.14  127.0.0.1
+        server.connect(new InetSocketAddress("119.29.254.14", 9010));//119.29.254.14  127.0.0.1
         server.setKeepAlive(true);
         OutputStream out = server.getOutputStream();
         InputStream in = server.getInputStream();

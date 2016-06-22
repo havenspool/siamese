@@ -43,7 +43,6 @@ public class DeskJob  implements Runnable{
 
 
     public void run() {
-        System.out.println("DeskJob run:");
         try {
             List<Integer> bankerTasks = new ArrayList<Integer>();
             List<Integer> betTasks = new ArrayList<Integer>();
