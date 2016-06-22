@@ -8,7 +8,7 @@ import com.havens.siamese.db.IdGenerator;
  */
 public class User extends DBObject {
     public String table_name="users";
-    public long id;
+    public int id;
     public String name;
     public String passwd;
 
@@ -26,13 +26,7 @@ public class User extends DBObject {
     public int position;
     public int banker;//庄家1 闲家0
     public int betCoin;//正就是赢，负就是输
+    public int deskState;//0准备 1已抢庄 22已下注
     public String bets;
-    public int cardNum;
     public int[] cards;
-
-    public void generateId(String table, IdGenerator idGen){
-        if ((this.table_name.equals(table)) && (idGen != null))
-            this.id = idGen.generateLongId().longValue();
-    }
-
 }

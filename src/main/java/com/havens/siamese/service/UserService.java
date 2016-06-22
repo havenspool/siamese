@@ -35,6 +35,7 @@ public abstract class UserService extends Service{
             write(MessageHelper.cmd_error(cmd, false, ErrorCode.USER_NOT_EXIST));
             return false;
         }
+        userCtrl.channel=channel;
         user=userCtrl.user;
         return true;
     }

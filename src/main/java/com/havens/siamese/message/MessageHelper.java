@@ -1,5 +1,7 @@
 package com.havens.siamese.message;
 
+import com.havens.siamese.entity.Desk;
+import com.havens.siamese.entity.helper.DeskHelper;
 import org.json.JSONObject;
 
 /**

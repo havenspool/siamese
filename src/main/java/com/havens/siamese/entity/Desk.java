@@ -11,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Desk extends DBObject {
     public int deskId;
     public long time;//用于验证是否是同一盘
-    public long bankerUserId;
-    public ConcurrentHashMap<Long, User> users;
-    public ConcurrentHashMap<Long, int[]> cards;
+    public int bankerUserId;
+    public ConcurrentHashMap<Integer, User> users;
+    public ConcurrentHashMap<Integer, int[]> cards;
     public int betCoins;//总下注金额
     public int winUserId;//赢家Id
 

@@ -72,13 +72,34 @@ public class CardHelper {
         return 1;
     }
 
-    public static long equalsCard(int[] card1,long userId1,int[] card2,long userId2){
-        if(cardType(card1)>cardType(card2)) return userId1;
-        else if(cardType(card1)<cardType(card1)) return userId2;
+    public static int maxCard(int[] card){
+        int max=card[0];
+        for(int i=1;i<card.length;i++){
+            if(max<card[i]) max=card[i];
+        }
+        return max;
+    }
 
+    public static boolean equalCardIndex(int[] cards1,int[] cards2){
+        if(maxCard(cards1)>maxCard(cards2)) return true;
+        else return false;
+    }
 
-
-        return userId1;
+    public static boolean equalCards(int[] cards1,int[] cards2){
+        //cards1>cards2 true
+        //比牌型
+        int type1=cardType(cards1);
+        int type2=cardType(cards2);
+        if(type1>type2) return true;
+        else if(type1<type2) return false;
+        //比点数
+        int point1=countPoints(cards1);
+        int point2=countPoints(cards2);
+        if(point1>point2) return true;
+        else if(point1<point2) return false;
+        //比牌大小
+        if(equalCardIndex(cards1,cards2)) return true;
+        else return false;
     }
 
 

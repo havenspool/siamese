@@ -1,16 +1,16 @@
 package com.havens.siamese.server;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.havens.siamese.Constants;
 import com.havens.siamese.Controller.UserController;
-import com.havens.siamese.db.DBException;
 import com.havens.siamese.entity.Desk;
 import com.havens.siamese.entity.User;
 import com.havens.siamese.entity.dao.DBFactory;
 import com.havens.siamese.entity.dao.cache.DBFactoryCache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.havens.siamese.entity.helper.CardHelper;
+import com.havens.siamese.entity.helper.DeskHelper;
 import com.havens.siamese.job.DeskJob;
 
 import java.util.concurrent.*;
@@ -33,13 +33,14 @@ public class WorldManager {
     private static WorldManager god;
     Server server;
     private ConcurrentHashMap<Integer, Desk> allDesks; //牌桌
-    private DeskJob deskJob;
 
     // thread pool
     private ThreadPoolExecutor dataJobMgr;
     // thread pool
 //    private ThreadPoolExecutor udpJobMgr;
     private ScheduledExecutorService scheduledJobMgr;
+
+    private DeskJob deskJob;
 
     private WorldManager(Server server){
         this.server=server;
@@ -56,7 +57,7 @@ public class WorldManager {
 
         deskJob=new DeskJob();
 
-       // scheduledJobMgr.scheduleAtFixedRate(deskJob, 1, 60, TimeUnit.SECONDS);
+        scheduledJobMgr.scheduleAtFixedRate(deskJob, 60, 5, TimeUnit.SECONDS);
     }
 
     private void buildUpTheWorld() {
@@ -104,6 +105,13 @@ public class WorldManager {
         return this.onlineUser;
     }
 
+    public void broadcast(int userId,String json){
+        UserController userCtrl=onlineUser().getUnchecked(userId);
+        if(userCtrl!=null&&userCtrl.user.id!=0){
+            userCtrl.channel.write(json);
+        }
+    }
+
     public final Object DESK_LOCK = new Object();
 
     public Desk getDesk(int deskId) {
@@ -114,19 +122,30 @@ public class WorldManager {
         boolean isJoin=false;
         synchronized (DESK_LOCK){
             for (Desk desk:allDesks.values()){
-                if(!desk.isFull()&&desk.state==Constants.DESK_READY&&desk.deskId!=deskId){
+                if(!desk.isFull()&&desk.state!=Constants.DESK_BET&&desk.deskId!=deskId){
                     user.position=desk.users.size();
                     user.deskId=desk.deskId;
-                    if(desk.users==null) desk.users=new ConcurrentHashMap<Long, User>();
+                    if(desk.users==null) desk.users=new ConcurrentHashMap<Integer, User>();
                     desk.users.put(user.id,user);
+
+                    if(desk.users.size()==2){
+                        //进入选装
+                        desk.state=Constants.DESK_GETBANKER;
+                        for(User tmp:desk.users.values()){
+                            broadcast(tmp.id, DeskHelper.desk_info("desk_info",desk));
+                        }
+                        deskJob.addBanker(deskId);
+                    }
                     isJoin=true;
+                    break;
                 }
             }
             if(!isJoin){
                 Desk desk=new Desk();
                 desk.deskId=allDesks.size()+1;
                 desk.state=Constants.DESK_READY;
-                desk.users=new ConcurrentHashMap<Long, User>();
+                desk.users=new ConcurrentHashMap<Integer, User>();
+                desk.cards=new ConcurrentHashMap<Integer, int[]>();
                 user.deskId=desk.deskId;
                 user.position=desk.users.size();
                 desk.users.put(user.id,user);
@@ -134,6 +153,23 @@ public class WorldManager {
             }
         }
     }
+
+    public void deskBanker(int deskId) {
+        synchronized (DESK_LOCK) {
+            Desk desk = allDesks.get(deskId);
+            if (desk != null&&desk.state == Constants.DESK_GETBANKER) {
+                //选庄
+                desk.bankerUserId=DeskHelper.doBanker(desk.users);
+                for(User tmp:desk.users.values()){
+                    tmp.banker=0;
+                    broadcast(tmp.id, DeskHelper.get_banker("get_banker",desk.bankerUserId));
+                }
+                desk.state = Constants.DESK_BET;
+                deskJob.addBet(deskId);
+            }
+        }
+    }
+
 
     public void outDesk(User user) {
         synchronized (DESK_LOCK) {
@@ -217,15 +253,11 @@ public class WorldManager {
         return isBet;
     }
 
-    public boolean openCard(User user) {
-        boolean open=false;
+    public void openCard(int deskId) {
         synchronized (DESK_LOCK) {
-            Desk desk = allDesks.get(user.deskId);
+            Desk desk = allDesks.get(deskId);
             if (desk != null) {
-                if(desk.state == Constants.DESK_BET){
-                    desk.state = Constants.DESK_OPENCARD;
-                }
-                if(desk.state == Constants.DESK_OPENCARD&&desk.users!=null&&desk.users.size()>0){
+                if(desk.state == Constants.DESK_BET&&desk.users!=null&&desk.users.size()>0){
                     //产生牌点数
                     int[] cards=CardHelper.genCard(desk.users.size());
                     int index=0;
@@ -235,18 +267,32 @@ public class WorldManager {
                             tmp.cards[0]=cards[index++];
                             tmp.cards[1]=cards[index++];
                             tmp.cards[2]=cards[index++];
-                            if(desk.cards==null) desk.cards=new ConcurrentHashMap<Long, int[]>();
+                            if(desk.cards==null) desk.cards=new ConcurrentHashMap<Integer, int[]>();
                             desk.cards.put(tmp.id,tmp.cards);
                         }
                     }
                     //判断输赢
+                    int winUserId=0;
+                    int[] cards1=null;
+                    for(int userId:desk.cards.keySet()){
+                        int[] cards2=desk.cards.get(userId);
+                        if(cards1==null){
+                            cards1=cards2;
+                            winUserId=userId;
+                            continue;
+                        }
+                        //cards1>cards2 true
+                        if(CardHelper.equalCards(cards1,cards2)) winUserId=userId;
 
-
-                    open=true;
+                    }
+                    desk.winUserId=winUserId;
+                    desk.state = Constants.DESK_READY;
+                    for(User tmp:desk.users.values()){
+                        broadcast(tmp.id, DeskHelper.open_card("open_card",desk));
+                    }
                 }
             }
         }
-        return open;
     }
 
 }
