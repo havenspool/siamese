@@ -13,6 +13,7 @@ public class User extends DBObject {
     public String passwd;
 
     public int coin;//正就是赢，负就是输
+    public int memberid;//游戏
 
     public long registerTime;
     public long loginTime;

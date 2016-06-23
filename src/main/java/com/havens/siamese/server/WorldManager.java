@@ -12,6 +12,7 @@ import com.havens.siamese.entity.dao.cache.DBFactoryCache;
 import com.havens.siamese.entity.helper.CardHelper;
 import com.havens.siamese.entity.helper.DeskHelper;
 import com.havens.siamese.job.DeskJob;
+import com.havens.siamese.utils.HttpRequestHelper;
 
 import java.util.concurrent.*;
 
@@ -134,6 +135,7 @@ public class WorldManager {
                         for(User tmp:desk.users.values()){
                             broadcast(tmp.id, DeskHelper.desk_info("desk_info",desk));
                         }
+                        desk.time=System.currentTimeMillis()/1000;
                         deskJob.addBanker(deskId);
                     }
                     isJoin=true;
@@ -159,12 +161,19 @@ public class WorldManager {
             Desk desk = allDesks.get(deskId);
             if (desk != null&&desk.state == Constants.DESK_GETBANKER) {
                 //选庄
+                long curTime=System.currentTimeMillis()/1000;
+                if(curTime-desk.time<5){
+                    deskJob.addBet(deskId);
+                    return;
+                }
+
                 desk.bankerUserId=DeskHelper.doBanker(desk.users);
                 for(User tmp:desk.users.values()){
                     tmp.banker=0;
                     broadcast(tmp.id, DeskHelper.get_banker("get_banker",desk.bankerUserId));
                 }
                 desk.state = Constants.DESK_BET;
+                desk.time=System.currentTimeMillis()/1000;
                 deskJob.addBet(deskId);
             }
         }
@@ -176,24 +185,35 @@ public class WorldManager {
             Desk desk = allDesks.get(user.deskId);
             if (desk != null) {
                 if(desk.state != Constants.DESK_READY){
-                    //扣分
+                    //扣除银币
+                    minusCoin(user,Constants.MINUS_COINS_TYPE_EXITROOM,Constants.MINUS_COINS_AMOUNT_EXITROOM);
                 }
                 desk.users.remove(user.id);
             }
         }
     }
 
+    public void minusCoin(User user,int type,int coin){
+        user.coin-=coin;
+    }
+
+
     public void outDesk(int userId) {
         synchronized (DESK_LOCK) {
             for (Desk desk:allDesks.values()){
                 if (desk != null&&desk.users!=null&&desk.users.size()>0) {
-                    if(desk.users.get(userId)!=null){
+                    User user=desk.users.get(userId);
+                    if(user!=null){
+                        if(desk.state != Constants.DESK_READY){
+                            //扣除银币
+                            minusCoin(user,Constants.MINUS_COINS_TYPE_EXITROOM,Constants.MINUS_COINS_AMOUNT_EXITROOM);
+                        }
                         desk.users.remove(userId);
 
                         if(desk.users.size()==0) {
                             allDesks.remove(desk.deskId);
-                            break;
                         }
+                        break;
                     }
                 }
             }
@@ -213,7 +233,7 @@ public class WorldManager {
     public void readyNext(int deskId) {
         synchronized (DESK_LOCK) {
             Desk desk = allDesks.get(deskId);
-            if (desk != null) {
+            if (desk != null&&desk.state==Constants.DESK_BET) {
                 desk.state = Constants.DESK_READY;
             }
         }
@@ -223,8 +243,6 @@ public class WorldManager {
         synchronized (DESK_LOCK) {
             Desk desk = allDesks.get(user.deskId);
             if (desk != null && desk.state == Constants.DESK_READY) {
-                desk.state = Constants.DESK_GETBANKER;
-                desk.bankerUserId=user.id;
                 User tmp=desk.users.get(user.id);
                 if(tmp!=null){
                     tmp.banker=1;
@@ -238,9 +256,6 @@ public class WorldManager {
         synchronized (DESK_LOCK) {
             Desk desk = allDesks.get(user.deskId);
             if (desk != null) {
-                if(desk.state == Constants.DESK_GETBANKER){
-                    desk.state = Constants.DESK_BET;
-                }
                 if(desk.state == Constants.DESK_BET&&desk.users!=null&&desk.users.size()>0){
                     User tmp=desk.users.get(user.id);
                     if(tmp!=null){
@@ -288,6 +303,11 @@ public class WorldManager {
                     desk.winUserId=winUserId;
                     desk.state = Constants.DESK_READY;
                     for(User tmp:desk.users.values()){
+                        if(tmp.id!=winUserId) {
+                            //扣除银币
+                            minusCoin(tmp, Constants.MINUS_COINS_TYPE_BET, Constants.BET_COINS);
+                        }
+
                         broadcast(tmp.id, DeskHelper.open_card("open_card",desk));
                     }
                 }

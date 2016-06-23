@@ -18,4 +18,12 @@ public class Constants {
     //下注金额
     public static final int BET_TIMES=1;
     public static final int BET_COINS=1000;
+
+    //扣除银币类型
+    public static final int MINUS_COINS_TYPE_BET=1;
+    public static final int MINUS_COINS_TYPE_EXITROOM=2;
+
+    //扣除银币金额
+    public static final int MINUS_COINS_AMOUNT_EXITROOM=1000;
+
 }
